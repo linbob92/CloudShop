@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.webdesign.bestsell.dao.ProductDao">
+
+    <resultMap id="ProductResultMap" type="Product">
+
+        <id column="id" property="id" jdbcType="INTEGER"/>
+
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="img" property="img" jdbcType="VARCHAR"/>
+        <result column="description" property="description" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="stock" property="stock" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="category_id" property="categoryId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getProductById" resultMap="ProductResultMap">
+        select *  from `product` where `id` = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getAllProduct" resultMap="ProductResultMap">
+        select *  from `product`
+    </select>
+
+    <select id="getProductOnSell" resultMap="ProductResultMap">
+        select *  from `product` where `stock` != 0
+    </select>
+
+    <select id="getProductByUserId" resultMap="ProductResultMap">
+        select *  from `product` where `user_id` = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getProductByCategoryId" resultMap="ProductResultMap">
+        select *  from `product` where `category_id` = #{categoryId,jdbcType=INTEGER}
+    </select>
+
+    <select id="searchProductByName" resultMap="ProductResultMap">
+        select * from `product` where `name` LIKE concat('%',#{name,jdbcType=VARCHAR},'%')
+    </select>
+
+    <insert id="sell" parameterType="Product">
+        INSERT INTO `product` (`user_id`, `price`, `img`, `description`, `create_date`, `stock`, `name`, `category_id`)
+        VALUES (#{userId,jdbcType=INTEGER}, #{price,jdbcType=DOUBLE}, #{img,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR},
+             #{createDate,jdbcType=TIMESTAMP}, #{stock,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{categoryId,jdbcType=INTEGER});
+    </insert>
+
+    <update id="updateProduct" parameterType="Product">
+
+        update product
+
+        <trim prefix="set" suffixOverrides=",">
+
+            <if test="price != null "> price = #{price,jdbcType=DOUBLE},</if>
+            <if test="img != null "> img = #{img,jdbcType=VARCHAR},</if>
+            <if test="description != null "> description = #{description,jdbcType=VARCHAR},</if>
+            <if test="stock != null "> stock = #{stock,jdbcType=INTEGER},</if>
+            <if test="name != null "> `name` = #{name,jdbcType=VARCHAR},</if>
+            <if test="categoryId != null "> category_id = #{categoryId,jdbcType=INTEGER},</if>
+        </trim>
+        where
+        id=#{id}
+    </update>
+</mapper>
