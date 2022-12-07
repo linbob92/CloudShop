@@ -1,5 +1,0 @@
-this is an example
-Input File With
-some differences
-but many lines
-the same!
